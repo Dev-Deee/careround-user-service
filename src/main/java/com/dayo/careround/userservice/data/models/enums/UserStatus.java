@@ -1,4 +1,5 @@
 package com.dayo.careround.userservice.data.models.enums;
 
-public class deleteme {
+public enum UserStatus {
+    ACTIVE, INACTIVE,SUSPENDED
 }
