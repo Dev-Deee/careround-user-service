@@ -39,4 +39,7 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserStatus status;
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private UUID publicId = UUID.randomUUID();
 }
