@@ -13,14 +13,14 @@ import java.util.UUID;
 @Table(name = "nurses")
 
 public class Nurse extends User {
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NurseGrade grade;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Shift shift;
-
     @Column
-    private UUID assignedWardId;
+    private String specialization;
+
+    @Column(nullable = false, unique = true)
+    private String licenseNumber;
 }

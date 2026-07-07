@@ -1,8 +1,7 @@
 package com.dayo.careround.userservice.data.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.dayo.careround.userservice.data.models.enums.DoctorGrade;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +10,10 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "doctors")
 public class Doctor extends User {
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DoctorGrade grade;
 
     @Column(nullable = false)
     private String specialization;

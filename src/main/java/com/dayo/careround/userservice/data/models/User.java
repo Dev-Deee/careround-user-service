@@ -1,7 +1,5 @@
 package com.dayo.careround.userservice.data.models;
 
-import com.dayo.careround.userservice.data.models.enums.UserRole;
-import com.dayo.careround.userservice.data.models.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,11 +9,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-
 public abstract class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID id;   // same UUID as AuthUser.id — set explicitly, never auto-generated here
 
     @Column(nullable = false)
     private String firstName;
@@ -23,23 +20,9 @@ public abstract class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false,unique = true)
-    private String email;
-
-    @Column(nullable = false,unique = true)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String passwordHash;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserStatus status;
+    @Column
+    private String photoUrl;
 
     @Column(nullable = false, unique = true, updatable = false)
-    private UUID publicId = UUID.randomUUID();
+    private UUID publicId;   // same publicId as AuthUser.publicId — copied, not regenerated
 }
