@@ -2,6 +2,7 @@ package com.dayo.careround.userservice.services;
 
 import com.dayo.careround.userservice.data.models.User;
 import com.dayo.careround.userservice.data.repositories.UserRepository;
+import com.dayo.careround.userservice.dto.event.RegistrationCancelledEvent;
 import com.dayo.careround.userservice.dto.event.UserRegisteredEvent;
 import com.dayo.careround.userservice.utils.UserProfileFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +38,17 @@ public class UserEventConsumer {
             log.error("Failed to process user.registered event: {}", e.getMessage(), e);
             // Not re-throwing: a poison-pill event shouldn't block the consumer forever.
             // Worth a dead-letter topic later; logging is the stopgap for now.
+        }
+    }
+
+    @KafkaListener(topics = "user.registration_cancelled", groupId = "user-service-group")
+    public void handleRegistrationCancelled(String payload) {
+        try {
+            RegistrationCancelledEvent event = objectMapper.readValue(payload, RegistrationCancelledEvent.class);
+            userRepository.deleteById(event.userId());
+            log.info("Deleted profile row for cancelled registration: {}", event.userId());
+        } catch (Exception e) {
+            log.error("Failed to process user.registration_cancelled event: {}", e.getMessage(), e);
         }
     }
 }
