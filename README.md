@@ -4,7 +4,14 @@ Staff profiles (doctors, nurses, admins). HTTP 8082, gRPC 9091, DB `careround_us
 
 - **Kafka in:** `user.registered` (creates the Doctor/Nurse/Admin profile with the same id as the auth account),
   `user.registration_cancelled`.
-- **REST:** `GET /api/v1/users/{publicId}`.
+- **REST:**
+  - `GET /api/v1/users/{publicId}` → `{publicId, firstName, lastName, photoUrl, role}`.
+  - `GET /api/v1/users/directory?ids=<id,...>` → `[{id, publicId, displayName, role, grade}]`. `ids` are **internal user ids**
+    (the JWT `sub`, and every staff reference in other services: `createdBy`, `assignedNurseId`, `authorId`, ...). At most 100;
+    unknown ids are omitted; malformed → 400. Sorted by last name, first name.
+  - `GET /api/v1/users/directory?role=DOCTOR|NURSE&q=<name prefix>&page=0&size=20` → `{items, page, size, total}` (size max 100;
+    sorted last name, first name, id). For pickers.
+  - Both: any authenticated user; no email or phone. Account status is not here (it lives in auth-service).
 - **gRPC server (9091):** `LicenseVerificationService.LicenseNumberExists` (auth-service checks duplicate licence
   numbers), `NurseSeniorityService.GetMostSeniorNurse` (ward-service charge succession).
 - Grades are the `DoctorGrade` / `NurseGrade` enums.
