@@ -20,7 +20,6 @@ plain environment variables work too.
 | `DB_PASSWORD` | Postgres password |
 | `JWT_PUBLIC_KEY` | RSA public key used to verify access tokens; same value in every service. PEM on one line, `|` for newlines |
 | `KAFKA_BOOTSTRAP_SERVERS` | Kafka (root docker-compose: careround-kafka) |
-| `JWT_SECRET` | legacy `app.jwt.secret` property; not used by any code (tokens are RS256, verified with JWT_PUBLIC_KEY) |
 
 ## Run
 
