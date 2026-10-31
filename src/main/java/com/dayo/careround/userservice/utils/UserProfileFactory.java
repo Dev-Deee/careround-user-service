@@ -24,7 +24,7 @@ public class UserProfileFactory {
     private Doctor buildDoctor(UserRegisteredEvent event) {
         Doctor doctor = new Doctor();
         applyCommonFields(doctor, event);
-        doctor.setGrade(DoctorGrade.valueOf(event.grade()));
+        doctor.setGrade(parseGrade(DoctorGrade.class, event));
         doctor.setSpecialization(event.specialization());
         doctor.setLicenseNumber(event.licenseNumber());
         return doctor;
@@ -33,7 +33,7 @@ public class UserProfileFactory {
     private Nurse buildNurse(UserRegisteredEvent event) {
         Nurse nurse = new Nurse();
         applyCommonFields(nurse, event);
-        nurse.setGrade(NurseGrade.valueOf(event.grade()));
+        nurse.setGrade(parseGrade(NurseGrade.class, event));
         nurse.setSpecialization(event.specialization()); // nullable — fine if null
         nurse.setLicenseNumber(event.licenseNumber());
         return nurse;
@@ -50,5 +50,13 @@ public class UserProfileFactory {
         user.setPublicId(event.publicId());
         user.setFirstName(event.firstName());
         user.setLastName(event.lastName());
+    }
+
+    // valueOf(null) would be a NullPointerException; both cases are a bad event, not a transient failure.
+    private static <E extends Enum<E>> E parseGrade(Class<E> grades, UserRegisteredEvent event) {
+        if (event.grade() == null) {
+            throw new IllegalArgumentException("user.registered for " + event.role() + " " + event.userId() + " has no grade");
+        }
+        return Enum.valueOf(grades, event.grade()); // IllegalArgumentException for an unknown grade
     }
 }
