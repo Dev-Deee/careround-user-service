@@ -14,6 +14,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, Object>> handleBadRequest(BadRequestException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
